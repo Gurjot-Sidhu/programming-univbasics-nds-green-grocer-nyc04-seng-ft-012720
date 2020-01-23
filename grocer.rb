@@ -30,13 +30,49 @@ def consolidate_cart(cart)
 end
 
 def apply_coupons(cart, coupons)
-  
+  result = []
+  if coupons.length == 0 
+    return cart
+  end
+  count = 0 
+  while count < cart.length do 
+
+    citem = cart[count]
+
+    couponitem = find_item_by_name_in_collection(citem[:item], coupons)
+
+    if couponitem
+      no_coupon_count = citem[:count] % couponitem[:num]
+      # coupon_applied_count = citem[:count] - no_coupon_count
+      per_unit_price = couponitem[:cost] / couponitem[:num]
+      # couponitems_count = coupon_applied_count / couponitem[:num] 
+
+
+
+      temp_hash = {
+        :item => "#{citem[:item]} W/COUPON",
+        :price => per_unit_price,
+        :clearance => citem[:clearance],
+        :count => couponitem[:num]
+      }
+
+      result << temp_hash
+
+
+      citem[:count] = no_coupon_count
+    end
+
+    result << citem
+
+    count += 1 
+  end
+  return result
+
+
 end
 
 def apply_clearance(cart)
-  # Consult README for inputs and outputs
-  #
-  # REMEMBER: This method **should** update cart
+ 
 end
 
 def checkout(cart, coupons)
